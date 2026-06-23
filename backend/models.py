@@ -15,6 +15,7 @@ class Users(db.Model):
     address=db.Column(db.String,nullable=False)
     full_name=db.Column(db.String,nullable=False)
     pin_code=db.Column(db.String,nullable=False)
+    is_approved = db.Column(db.Boolean, default=True)  # True for normal users
 
     
     booking=db.relationship("Booking",cascade="all,delete",backref="users",lazy=True) #User can access all of his bookings
@@ -45,6 +46,7 @@ class Staff_profile(db.Model):
     phone=db.Column(db.String,nullable=False)
     joined_at=db.Column(db.Date,nullable=False)
     experience_years=db.Column(db.Integer,nullable=False)
+    specialization=db.Column(db.String,nullable=False)
     trek=db.relationship("Trek",cascade="all,delete",backref="staff_profile",lazy=True) #Staff profile can access its treks
 
 
