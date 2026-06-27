@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            All Hikers
+        </div>
+
+        <ul>
+
+            <li><a href="#"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+
+            {% if session.get('role') == 'admin' %}
+
+                <li><a href="#"><i class="fa-solid fa-mountain"></i> Treks</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-user-group"></i> Staff</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-users"></i> Users</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-calendar-check"></i> Bookings</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-chart-column"></i> Reports</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+
+            {% else %}
+
+                <li><a href="#"><i class="fa-solid fa-mountain"></i> My Treks</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-users"></i> Participants</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-user"></i> Profile</a></li>
+
+            {% endif %}
+
+            <li><a href="#"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+
+        </ul>
+
+    </aside>
+
+
+    <!-- Main -->
+
+    <main class="main">
+
+        <!-- Navbar -->
+
+        <div class="navbar">
+
+            <h2>Trekking Management Application</h2>
+
+            <div class="profile">
+
+                <i class="fa-regular fa-user"></i>
+
+                {{ session.get('username',"Admin") }}
+
+            </div>
+
+        </div>
+
+
+        <!-- Cards -->
+
+        <div class="cards">
+
+            {% block cards %}
+
+            <div class="card">
+                <h4>Total Treks</h4>
+                <h1>{{ total_treks }}</h1>
+            </div>
+
+            <div class="card">
+                <h4>Total Users</h4>
+                <h1>{{ total_users }}</h1>
+            </div>
+
+            <div class="card">
+                <h4>Total Staff</h4>
+                <h1>{{ total_staff }}</h1>
+            </div>
+
+            <div class="card">
+                <h4>Total Bookings</h4>
+                <h1>{{ total_bookings }}</h1>
+            </div>
+
+            {% endblock %}
+
+        </div>
+
+
+        <!-- Page Content -->
+
+        <div class="content">
+
+            {% block content %}
+            {% endblock %}
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

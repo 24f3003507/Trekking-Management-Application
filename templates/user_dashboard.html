@@ -1,12 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
-</head>
-<body>
-    <h1>User Dashboard</h1>
-    <p>Welcome, {{ name }}!</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+User Dashboard
+{% endblock %}
+
+<!-- User dashboard doesn't have statistic cards -->
+{% block cards %}
+{% endblock %}
+
+{% block content %}
+
+<h1 class="page-title">
+    Welcome, {{ session.get('username', 'User') }}!
+</h1>
+
+<!-- Available Treks -->
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>Available Treks</h2>
+
+        <div class="filters">
+
+            <select>
+                <option>Difficulty: All</option>
+                <option>Easy</option>
+                <option>Moderate</option>
+                <option>Hard</option>
+            </select>
+
+            <select>
+                <option>Location: All</option>
+                <option>Uttarakhand</option>
+                <option>Himachal</option>
+                <option>Nepal</option>
+            </select>
+
+        </div>
+
+    </div>
+
+    <table>
+
+        <tr>
+            <th>Trek Name</th>
+            <th>Location</th>
+            <th>Difficulty</th>
+            <th>Duration</th>
+            <th>Available Slots</th>
+            <th>Action</th>
+        </tr>
+
+        {% for trek in available_treks %}
+
+        <tr>
+
+            <td>{{ trek.name }}</td>
+            <td>{{ trek.location }}</td>
+            <td>{{ trek.difficulty }}</td>
+            <td>{{ trek.duration }}</td>
+            <td>{{ trek.slots }}</td>
+
+            <td>
+
+                <a href="#" class="btn">
+                    Book Now
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+<br><br>
+
+<!-- My Bookings -->
+
+<div class="section">
+
+    <h2>My Bookings</h2>
+
+    <table>
+
+        <tr>
+
+            <th>Trek Name</th>
+            <th>Booking Date</th>
+            <th>Status</th>
+            <th>Action</th>
+
+        </tr>
+
+        {% for booking in my_bookings %}
+
+        <tr>
+
+            <td>{{ booking.trek }}</td>
+
+            <td>{{ booking.date }}</td>
+
+            <td>{{ booking.status }}</td>
+
+            <td>
+
+                <a href="#" class="btn-outline">
+
+                    View Details
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+{% endblock %}

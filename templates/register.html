@@ -10,13 +10,19 @@
     <header>
         <div class="container">
             <img src="/static/images/logo.png" alt="Logo" class="logo">
-            <h1>AllHikers</h1>
+            <h1>One Step Away</h1>
 
         </div>
     </header>
     <main class="container">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% for category,message in messages %}
+
+                <div class="flash {{category}}">{{message}}</div>
+            {% endfor %}
+        {% endwith %}
         <div class="login-box">
-            <h2>Register</h2>
+            <h2>Create an Account</h2>
             <form method="POST" action="{{ url_for('auth.register') }}">
                 <div class="form-group">
                     <label for="username">Username:</label>

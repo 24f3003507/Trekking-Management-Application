@@ -9,11 +9,17 @@
     <header>
         <div class="container">
             <img src="/static/images/logo.png" alt="Logo" class="logo">
-            <span>AllHikers</span>
+            <h1>One Step Away</h1>
         </div>
     </header>
 
     <main class="container">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% for category,message in messages %}
+
+                <div class="flash {{category}}">{{message}}</div>
+            {% endfor %}
+        {% endwith %}
         <div class="login-box">
             <div class="auth-card">
                 <h2>Staff Registration</h2>

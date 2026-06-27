@@ -1,12 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-</head>
-<body>
-    <h1>Admin Dashboard</h1>
-    <p>Welcome, {{ name }}!</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h2>Recent Bookings</h2>
+
+<table>
+
+    <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Trek</th>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+
+    {% for booking in bookings %}
+
+    <tr>
+
+        <td>{{ booking.id }}</td>
+        <td>{{ booking.user }}</td>
+        <td>{{ booking.trek }}</td>
+        <td>{{ booking.date }}</td>
+        <td>{{ booking.status }}</td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endblock %}
