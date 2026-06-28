@@ -1,0 +1,136 @@
+/* Container */
+.staff-container {
+    padding: 32px;
+}
+
+/* Title */
+.staff-title {
+    margin-bottom: 24px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+/* Tab bar */
+.tab-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #ddd;
+}
+
+.tab-btn {
+    padding: 10px 24px;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 6px 6px 0 0;
+    font-size: 14px;
+}
+
+.tab-active {
+    background: #2d6a2d;
+    color: white;
+}
+
+.tab-inactive {
+    background: #ccc;
+    color: #333;
+}
+
+.tab-inactive:hover {
+    background: #b5b5b5;
+}
+
+/* Table */
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.staff-table thead {
+    background: #f5f5f5;
+}
+
+.staff-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 14px;
+    color: #444;
+    font-weight: 600;
+}
+
+.staff-table tbody tr {
+    border-top: 1px solid #eee;
+}
+
+.staff-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.staff-table td {
+    padding: 14px 16px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Action buttons cell */
+.action-cell {
+    display: flex;
+    gap: 8px;
+}
+
+/* Buttons */
+.btn {
+    padding: 6px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.btn-approve {
+    background: #28a745;
+    color: white;
+}
+
+.btn-approve:hover {
+    background: #218838;
+}
+
+.btn-reject {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-reject:hover {
+    background: #c82333;
+}
+
+/* Status badges */
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.badge-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* Empty state */
+.empty-msg {
+    color: #888;
+    font-size: 15px;
+    margin-top: 16px;
+}

@@ -26,13 +26,13 @@
 
         <ul>
 
-            <li><a href="#"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('auth.dashboard') }}"><i class="fa-solid fa-house"></i> Dashboard</a></li>
 
             {% if session.get('role') == 'admin' %}
 
                 <li><a href="#"><i class="fa-solid fa-mountain"></i> Treks</a></li>
 
-                <li><a href="#"><i class="fa-solid fa-user-group"></i> Staff</a></li>
+                <li><a href="{{ url_for('auth.staff') }}"><i class="fa-solid fa-user-group"></i> Staff</a></li>
 
                 <li><a href="#"><i class="fa-solid fa-users"></i> Users</a></li>
 

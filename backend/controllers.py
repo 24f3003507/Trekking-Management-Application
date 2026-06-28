@@ -69,19 +69,20 @@ def register():
         return redirect(url_for('auth.login'))
     return render_template("register.html",msg="")
 
+
 @auth_bp.route("/admin_dashboard")
 def admin_dashboard():
-    #name=request.args.get(ADMIN_CREDENTIALS['username'])
+    
     return render_template("admin_dashboard.html")
 
 @auth_bp.route("/user_dashboard")
 def user_dashboard():
-    name=request.args.get("name")
+    
     return render_template("user_dashboard.html")
 
 @auth_bp.route("/staff_dashboard")
 def staff_dashboard():
-    name=request.args.get("name")
+    
     return render_template("staff_dashboard.html")
 
 
@@ -124,7 +125,7 @@ def register_staff():
         # Create Staff_profile entry simultaneously
         staff_profile = Staff_profile(
             name=full_name,
-            user_id=user_id,
+            user_id=new_staff.id,
             phone=phone,
             experience_years=experience_years,
             joined_at=joined_at,
@@ -143,3 +144,47 @@ def logout():
     flash('You have been logged out.', 'info')
     #return redirect(url_for('auth.login'))
     return render_template('login.html')
+
+
+@auth_bp.route('/admin_dashboard/staff')
+def staff():
+    active_tab = request.args.get('tab', 'pending')
+
+    pending_staff = db.session.query(Users, Staff_profile).join(
+        Staff_profile, Staff_profile.user_id == Users.id
+    ).filter(Users.role == 2, Users.is_approved == False).all()
+
+    approved_staff = db.session.query(Users, Staff_profile).join(
+        Staff_profile, Staff_profile.user_id == Users.id
+    ).filter(Users.role == 2, Users.is_approved == True).all()
+
+    return render_template('approve_staff.html',pending_staff=pending_staff,approved_staff=approved_staff,active_tab=active_tab)
+
+
+@auth_bp.route('/admin_dashboard/')
+def dashboard():
+    return render_template('admin_dashboard.html')
+
+
+@auth_bp.route('/admin_dashboard/approve/<int:user_id>')
+def approve_staff(user_id):
+    usr = Users.query.get(user_id)
+    if usr and usr.role == 2:
+        usr.is_approved = True
+        db.session.commit()
+    return redirect(url_for('auth.staff', tab='pending'))
+
+
+@auth_bp.route('/admin_dashboard/reject/<int:user_id>')
+def reject_staff(user_id):
+    usr = Users.query.get(user_id)
+    if usr and usr.role == 2:
+        Staff_profile.query.filter_by(user_id=user_id).delete()
+        db.session.delete(usr)
+        db.session.commit()
+    return redirect(url_for('auth.staff', tab='pending'))
+
+
+
+
+

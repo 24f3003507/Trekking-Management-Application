@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Management{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/approve_staff.css') }}">
+
+<div class="staff-container">
+
+    <h2 class="staff-title">Staff Requests</h2>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+        <a href="{{ url_for('auth.staff', tab='pending') }}"
+           class="tab-btn {{ 'tab-active' if active_tab == 'pending' else 'tab-inactive' }}">
+            Pending ({{ pending_staff|length }})
+        </a>
+        <a href="{{ url_for('auth.staff', tab='approved') }}"
+           class="tab-btn {{ 'tab-active' if active_tab == 'approved' else 'tab-inactive' }}">
+            Approved ({{ approved_staff|length }})
+        </a>
+    </div>
+
+    <!-- Pending Tab -->
+    {% if active_tab == 'pending' %}
+        {% if pending_staff %}
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>Staff ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Specialization</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user, profile in pending_staff %}
+                <tr>
+                    <td>S00{{ user.id }}</td>
+                    <td>{{ profile.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ profile.phone }}</td>
+                    <td>{{ profile.specialization }}</td>
+                    <td><span class="badge badge-pending">Pending</span></td>
+                    <td class="action-cell">
+                        <a href="{{ url_for('auth.approve_staff', user_id=user.id) }}"
+                           class="btn btn-approve">Approve</a>
+                        <a href="{{ url_for('auth.reject_staff', user_id=user.id) }}"
+                           class="btn btn-reject">Reject</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-msg">No pending staff requests.</p>
+        {% endif %}
+
+    <!-- Approved Tab -->
+    {% elif active_tab == 'approved' %}
+        {% if approved_staff %}
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>Staff ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Specialization</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user, profile in approved_staff %}
+                <tr>
+                    <td>S00{{ user.id }}</td>
+                    <td>{{ profile.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ profile.phone }}</td>
+                    <td>{{ profile.specialization }}</td>
+                    <td><span class="badge badge-approved">Approved ✓</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-msg">No approved staff yet.</p>
+        {% endif %}
+    {% endif %}
+
+</div>
+{% endblock %}
