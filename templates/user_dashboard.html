@@ -42,40 +42,43 @@ User Dashboard
 
     </div>
 
-    <table>
-
-        <tr>
-            <th>Trek Name</th>
-            <th>Location</th>
-            <th>Difficulty</th>
-            <th>Duration</th>
-            <th>Available Slots</th>
-            <th>Action</th>
-        </tr>
-
-        {% for trek in available_treks %}
-
-        <tr>
-
-            <td>{{ trek.name }}</td>
-            <td>{{ trek.location }}</td>
-            <td>{{ trek.difficulty }}</td>
-            <td>{{ trek.duration }}</td>
-            <td>{{ trek.slots }}</td>
-
-            <td>
-
-                <a href="#" class="btn">
-                    Book Now
-                </a>
-
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
+    <div>
+    {% if treks %}
+    <table class="task-table">
+        <thead>
+            <tr>
+                <!-- <th>ID</th> -->
+                <th>Trek Name</th>
+                <th>Location</th>
+                <th>Difficulty</th>
+                <th>Duration (Days)</th>
+                <th>Available Slots</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trek in treks %}
+            <tr>
+                <!-- <td>{{ loop.index }}</td> -->
+                <td>{{ trek.trek_name }}</td>
+                <td>{{ trek.location }}</td>
+                <td>{{ trek.difficulty }}</td>
+                <td>{{ trek.duration_days }}</td>
+                <td>{{ trek.available_slots }}</td>
+                
+                <td>
+                    <a href="#"
+                       
+                       style="color:#61c10c" >Book Now</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+    {% else %}
+        <p>No Available Treks yet.</p>
+    {% endif %}
+</div>
 
 </div>
 

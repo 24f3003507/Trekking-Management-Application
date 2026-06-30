@@ -77,8 +77,8 @@ def admin_dashboard():
 
 @auth_bp.route("/user_dashboard")
 def user_dashboard():
-    
-    return render_template("user_dashboard.html")
+    treks = Trek.query.all()  # After save of add new trek it will appear here also
+    return render_template("user_dashboard.html", treks=treks)
 
 @auth_bp.route("/staff_dashboard")
 def staff_dashboard():
@@ -184,7 +184,73 @@ def reject_staff(user_id):
         db.session.commit()
     return redirect(url_for('auth.staff', tab='pending'))
 
+@auth_bp.route('/admin_dashboard/blacklist/<int:user_id>')
+def blacklist_staff(user_id):
+    usr = Users.query.get(user_id)
+    if usr and usr.role == 2:
+        usr.is_approved = False  # just flip back to False
+        db.session.commit()
+    return redirect(url_for('auth.staff', tab='approved'))
 
 
+@auth_bp.route('/admin_dashboard/reactivate/<int:user_id>')
+def reactivate_staff(user_id):
+    usr = Users.query.get(user_id)
+    if usr and usr.role == 2:
+        usr.is_approved = True
+        db.session.commit()
+    return redirect(url_for('auth.staff', tab='pending'))
 
+
+@auth_bp.route('/admin_dashboard/trek')
+def trek():
+    treks = Trek.query.all()
+    return render_template('admin_trek.html', treks=treks)
+
+@auth_bp.route('/admin_dashboard/trek/add_trek', methods=['GET', 'POST'])
+def add_trek():
+    if request.method == 'POST':
+        trek_name = request.form.get('trek_name')
+        location = request.form.get('location')
+        difficulty = request.form.get('difficulty')
+        duration = request.form.get('duration')
+        available_slots = request.form.get('available_slots')
+        assigned_staff = request.form.get('assigned_staff')
+        status = request.form.get('status')
+        start_date_str = request.form.get('start_date')
+        end_date_str = request.form.get('end_date')
+
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+        new_trek = Trek(
+            trek_name=trek_name,
+            location=location,
+            difficulty=difficulty,
+            duration_days=int(duration),
+            available_slots=int(available_slots),
+            assigned_staff_id=int(assigned_staff) if assigned_staff else None,
+            status=status,
+            start_date=start_date,
+            end_date=end_date
+        )
+        db.session.add(new_trek)
+        db.session.commit()
+        return redirect(url_for('auth.trek'))
+    
+#Admin assign approved staff to Trek here
+
+    approved_staff = db.session.query(Staff_profile).join(
+        Users, Staff_profile.user_id == Users.id
+    ).filter(Users.role == 2, Users.is_approved == True).all()
+    return render_template('/add_trek.html', staff_list=approved_staff)
+
+
+@auth_bp.route('/admin_dashboard/trek/delete/<int:trek_id>')
+def delete_trek(trek_id):
+    trek = Trek.query.get(trek_id)
+    if trek:
+        db.session.delete(trek)
+        db.session.commit()
+    return redirect(url_for('auth.trek'))
 

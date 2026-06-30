@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block cards %}
+{% endblock %}
+
+{% block title %}Trek Management{% endblock %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/approve_staff.css') }}">
+<div class="add_trek">
+    <h2>Add New Trek </h2>
+    <br><br><br><br>
+    <form method="POST" action="{{ url_for('auth.add_trek') }}" style="width: 100%; max-width: 600px">
+        
+            <div class="form-group">
+                <label for="trek_name">Trek Name  :</label>
+                <input type="text" id="trek_name" name="trek_name" required >
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="location">Location  :</label>
+                <input type="text" id="location" name="location"  required>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="difficulty"> Difficulty  :</label>
+                <select name="difficulty" id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="moderate">Modrate</option>
+                    <option value="hard">Hard</option>
+                    <option value="extreme">Extreme</option>
+                </select>
+
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="duration" class="form-label">Duration(Days)  :</label>
+                <input type="number" class="form-control" name="duration" id="duration" >
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="available_slots" class="form-label">Available Slots :</label>
+                <input type="number" class="form-control" name="available_slots" id="available_slots">
+            </div><br>
+
+            <div class="form-group">
+                <label for="assigned_staff"> Assigned Staff  :</label>
+                <select name="assigned_staff" id="assigned_staff">
+                    <option value="">Select Staff</option>
+                    {% for staff in staff_list %}
+                        <option value="{{ staff.id }}">{{ staff.name }}</option>
+                    {% endfor %}
+                </select>
+            </div><br>
+
+
+            <div class="form-group">
+                <label for="status"> Status  :</label>
+                <select name="status" id="status">
+                    <option value="select_status">Select Status</option>
+                    <option value="active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="completed">Completed</option>
+                </select>
+
+            </div><br>
+
+            <div class="form-group">
+                <label for="start_date" class="form-label">Start Date  :</label>
+                <input type="date" class="joined_at" name="start_date" id="start_date" >
+            </div><br>
+
+
+            <div class="form-group">
+                <label for="end_date" class="form-label">End Date  :</label>
+                <input type="date" class="joined_at" name="end_date" id="end_date" >
+            </div>
+
+            <br>
+            <a href="{{ url_for('auth.trek') }}" class="btn-add-trek">Cancel</a>
+
+            <button type="submit" class="btn-add-trek">Save</button>
+
+        
+    </form>
+    
+</div>
+{% endblock %}

@@ -134,3 +134,46 @@
     font-size: 15px;
     margin-top: 16px;
 }
+.btn-blacklist {
+    background: #fd7e14;
+    color: white;
+}
+
+.btn-blacklist:hover {
+    background: #e06b0a;
+}
+
+.add_trek {
+    background: white;
+    max-width: 900px;
+    margin: 40px auto;
+    justify-content: center;
+    padding: 32px 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+
+}
+.btn-add-trek {
+    background-color: #61c10c;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-add-trek:hover {
+    background-color: green;
+}
+
+.form-group {
+    
+    margin-bottom: 20px;       
+    width: 100%;               
+}

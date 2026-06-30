@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Trek Management{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<div class="trek-header">
+    <h1>Treks</h1>
+    <a href="{{ url_for('auth.add_trek') }}" class="btn-add-trek">+ Add New Trek</a>
+</div>
+
+<div>
+    {% if treks %}
+    <table class="task-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Trek Name</th>
+                <th>Location</th>
+                <th>Difficulty</th>
+                <th>Duration (Days)</th>
+                <th>Slots</th>
+                <th>Status</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trek in treks %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ trek.trek_name }}</td>
+                <td>{{ trek.location }}</td>
+                <td>{{ trek.difficulty }}</td>
+                <td>{{ trek.duration_days }}</td>
+                <td>{{ trek.available_slots }}</td>
+                <td>{{ trek.status }}</td>
+                <td>{{ trek.start_date }}</td>
+                <td>{{ trek.end_date }}</td>
+                <td>
+                    <a href="{{ url_for('auth.delete_trek', trek_id=trek.id) }}"
+                       onclick="return confirm('Delete this trek?')"
+                       style="color:red;">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No treks added yet.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

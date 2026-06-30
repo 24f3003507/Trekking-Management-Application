@@ -30,7 +30,7 @@
 
             {% if session.get('role') == 'admin' %}
 
-                <li><a href="#"><i class="fa-solid fa-mountain"></i> Treks</a></li>
+                <li><a href="{{ url_for('auth.trek') }}"><i class="fa-solid fa-mountain"></i> Treks</a></li>
 
                 <li><a href="{{ url_for('auth.staff') }}"><i class="fa-solid fa-user-group"></i> Staff</a></li>
 
@@ -54,7 +54,7 @@
 
             {% endif %}
 
-            <li><a href="#"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+            <li><a href="{{ url_for('auth.logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
 
         </ul>
 

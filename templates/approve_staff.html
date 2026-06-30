@@ -71,6 +71,7 @@
                     <th>Contact</th>
                     <th>Specialization</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,7 +82,10 @@
                     <td>{{ user.email }}</td>
                     <td>{{ profile.phone }}</td>
                     <td>{{ profile.specialization }}</td>
-                    <td><span class="badge badge-approved">Approved ✓</span></td>
+                    <td><span class="badge badge-approved">Approved </span></td>
+                    <td class="action-cell">                                          
+                    <a href="{{ url_for('auth.blacklist_staff', user_id=user.id) }}" class="btn btn-blacklist">Deactivate</a>
+                    </td>     
                 </tr>
                 {% endfor %}
             </tbody>
