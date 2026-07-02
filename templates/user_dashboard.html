@@ -42,7 +42,7 @@ User Dashboard
 
     </div>
 
-    <div>
+    
     {% if treks %}
     <table class="task-table">
         <thead>
@@ -67,9 +67,7 @@ User Dashboard
                 <td>{{ trek.available_slots }}</td>
                 
                 <td>
-                    <a href="#"
-                       
-                       style="color:#61c10c" >Book Now</a>
+                    <a href="{{ url_for('auth.book_trek', trek_id=trek.id) }}" style="color:#61c10c">Book Now</a>
                 </td>
             </tr>
             {% endfor %}
@@ -80,7 +78,7 @@ User Dashboard
     {% endif %}
 </div>
 
-</div>
+
 
 <br><br>
 
@@ -89,42 +87,31 @@ User Dashboard
 <div class="section">
 
     <h2>My Bookings</h2>
+    
 
     <table>
+        <thead>
 
+            <tr>
+
+                <th>Trek Name</th>
+                <th>Booking Date</th>
+                <th>Status</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+
+    {% for booking, trek in bookings %}
         <tr>
-
-            <th>Trek Name</th>
-            <th>Booking Date</th>
-            <th>Status</th>
-            <th>Action</th>
-
-        </tr>
-
-        {% for booking in my_bookings %}
-
-        <tr>
-
-            <td>{{ booking.trek }}</td>
-
-            <td>{{ booking.date }}</td>
-
-            <td>{{ booking.status }}</td>
-
+            <td>{{ trek.trek_name }}</td>
+            <td>{{ booking.booking_date }}</td>
+            <td>{{ booking.booking_status }}</td>
             <td>
-
-                <a href="#" class="btn-outline">
-
-                    View Details
-
-                </a>
-
+                <a href="#" class="btn-outline">View Details</a>
             </td>
-
         </tr>
-
-        {% endfor %}
-
+    {% endfor %}
     </table>
 
 </div>

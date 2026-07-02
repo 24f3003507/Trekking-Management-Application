@@ -33,6 +33,7 @@ def login():
             session.clear()
             session['username'] = usr.username
             session['role'] = 'user'
+            session['id'] = usr.id 
             return redirect(url_for("auth.user_dashboard",name=uname,id=usr.id))
         
         elif usr and usr.role == 2:  # Staff
@@ -41,6 +42,7 @@ def login():
             session.clear()
             session['username'] = usr.username
             session['role'] = 'staff'
+            session['id'] = usr.id
             return redirect(url_for("auth.staff_dashboard", name=usr.username, id=usr.id))
         else:
             flash('Invalid user credentials', 'denger')
@@ -72,13 +74,18 @@ def register():
 
 @auth_bp.route("/admin_dashboard")
 def admin_dashboard():
-    
-    return render_template("admin_dashboard.html")
+    bookings = db.session.query(Booking, Trek, Users).join(Trek, Booking.trek_id == Trek.id).join(Users, Booking.user_id == Users.id).all()
+    return render_template("admin_dashboard.html",bookings=bookings)
 
-@auth_bp.route("/user_dashboard")
+@auth_bp.route('/user_dashboard')
 def user_dashboard():
-    treks = Trek.query.all()  # After save of add new trek it will appear here also
-    return render_template("user_dashboard.html", treks=treks)
+    user_id = request.args.get('id')
+    treks = Trek.query.all()      # Add new Trek (save clik) data will show in user_dashboard also due to this
+    bookings = db.session.query(Booking, Trek).join(Trek, Booking.trek_id == Trek.id).filter(Booking.user_id == user_id).all()
+
+#I used a join here because my Booking model doesn't store trek_name directly — i need to join with Trek to display it.
+
+    return render_template('user_dashboard.html', treks=treks, bookings=bookings)
 
 @auth_bp.route("/staff_dashboard")
 def staff_dashboard():
@@ -163,7 +170,17 @@ def staff():
 
 @auth_bp.route('/admin_dashboard/')
 def dashboard():
-    return render_template('admin_dashboard.html')
+    role = session.get('role')
+
+    if role == 'admin':
+        return redirect(url_for('auth.admin_dashboard'))
+    elif role == 'user':
+        return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=session.get('id')))
+    elif role == 'staff':
+        return redirect(url_for('auth.staff_dashboard', name=session.get('username'), id=session.get('id')))
+    else:
+        return redirect(url_for('auth.login'))
+
 
 
 @auth_bp.route('/admin_dashboard/approve/<int:user_id>')
@@ -253,4 +270,35 @@ def delete_trek(trek_id):
         db.session.delete(trek)
         db.session.commit()
     return redirect(url_for('auth.trek'))
+
+
+@auth_bp.route('/book_trek/<int:trek_id>')
+def book_trek(trek_id):
+    if session.get('role') != 'user':
+        return redirect(url_for('auth.login'))
+
+    user_id = session.get('id') 
+
+    trek = Trek.query.get(trek_id)
+    if not trek or trek.available_slots <= 0:
+        flash('Trek not available', 'danger')
+        return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=user_id))
+
+    new_booking = Booking(
+        booking_status='Pending',
+        booking_date=datetime.now().date(),
+        payment_status='Pending',
+        user_id=user_id,
+        trek_id=trek_id
+    )
+    db.session.add(new_booking)
+
+    trek.available_slots -= 1  # reduce slot count
+    db.session.commit()
+
+    flash('Trek booked successfully!', 'success')
+    return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=user_id))
+
+
+
 
