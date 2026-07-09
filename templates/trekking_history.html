@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %} Trekking History {% endblock %}
+
+{% block cards %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<h1>Booking Records  &  Trekking History</h1>
+<br><br><br>
+
+<div>
+    {% if bookings %}
+    <table>
+
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>User</th>
+                <th>Trek</th>
+                <th>Booking Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for booking, trek, user in bookings %}
+            <tr>
+                <td>{{ booking.id }}</td>
+                <td>{{ user.full_name }}</td>
+                <td>{{ trek.trek_name }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.booking_status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+    {% else %}
+        <p>No bookings yet.</p>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %} Browse Treks {% endblock %}
+
+{% block cards %}
+{% endblock %}
+
+{% block content %}
+
+
+
+    <form method="GET" action="{{ url_for('auth.browse_treks') }}" class="filter-form">
+
+        <input type="text" name="search" placeholder="Search treks..." value="{{ request.args.get('search', '') }}">
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+
+        <select name="difficulty">
+            <option value="">Difficulty: All</option>
+            <option value="Easy" {% if request.args.get('difficulty') == 'Easy' %}selected{% endif %}>Easy</option>
+            <option value="Moderate" {% if request.args.get('difficulty') == 'Moderate' %}selected{% endif %}>Moderate</option>
+            <option value="Hard" {% if request.args.get('difficulty') == 'Hard' %}selected{% endif %}>Hard</option>
+        </select>
+
+        <select name="location">
+            <option value="">Location: All</option>
+            <option value="Uttarakhand" {% if request.args.get('location') == 'Uttarakhand' %}selected{% endif %}>Uttarakhand</option>
+            <option value="Himachal" {% if request.args.get('location') == 'Himachal' %}selected{% endif %}>Himachal</option>
+            <option value="Nepal" {% if request.args.get('location') == 'Nepal' %}selected{% endif %}>Nepal</option>
+        </select>
+
+        
+    </form>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

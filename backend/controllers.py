@@ -1,6 +1,6 @@
 #App routes
 from flask import Blueprint, Flask,render_template,request,url_for,redirect,flash ,session 
-from .models import *
+from backend.models import *
 from datetime import datetime
 #from flask import current_app as app
 auth_bp = Blueprint('auth', __name__)
@@ -74,8 +74,12 @@ def register():
 
 @auth_bp.route("/admin_dashboard")
 def admin_dashboard():
+    total_treks = Trek.query.count()
+    total_users = Users.query.count()
+    total_staff = Staff_profile.query.count()
+    total_bookings = Booking.query.count()
     bookings = db.session.query(Booking, Trek, Users).join(Trek, Booking.trek_id == Trek.id).join(Users, Booking.user_id == Users.id).all()
-    return render_template("admin_dashboard.html",bookings=bookings)
+    return render_template("admin_dashboard.html",bookings=bookings , total_treks=total_treks, total_users=total_users, total_staff=total_staff, total_bookings=total_bookings)
 
 @auth_bp.route('/user_dashboard')
 def user_dashboard():
@@ -155,6 +159,12 @@ def logout():
 
 @auth_bp.route('/admin_dashboard/staff')
 def staff():
+
+    total_treks = Trek.query.count()
+    total_users = Users.query.count()
+    total_staff = Staff_profile.query.count()
+    total_bookings = Booking.query.count()
+
     active_tab = request.args.get('tab', 'pending')
 
     pending_staff = db.session.query(Users, Staff_profile).join(
@@ -165,7 +175,8 @@ def staff():
         Staff_profile, Staff_profile.user_id == Users.id
     ).filter(Users.role == 2, Users.is_approved == True).all()
 
-    return render_template('approve_staff.html',pending_staff=pending_staff,approved_staff=approved_staff,active_tab=active_tab)
+    return render_template('approve_staff.html',pending_staff=pending_staff,approved_staff=approved_staff,active_tab=active_tab,
+                           total_treks=total_treks,total_users=total_users,total_staff=total_staff,total_bookings=total_bookings)
 
 
 @auth_bp.route('/admin_dashboard/')
@@ -221,8 +232,14 @@ def reactivate_staff(user_id):
 
 @auth_bp.route('/admin_dashboard/trek')
 def trek():
+
+    total_treks = Trek.query.count()
+    total_users = Users.query.count()
+    total_staff = Staff_profile.query.count()
+    total_bookings = Booking.query.count()
+
     treks = Trek.query.all()
-    return render_template('admin_trek.html', treks=treks)
+    return render_template('admin_trek.html', treks=treks, total_treks=total_treks, total_users=total_users, total_staff=total_staff, total_bookings=total_bookings)
 
 @auth_bp.route('/admin_dashboard/trek/add_trek', methods=['GET', 'POST'])
 def add_trek():
@@ -272,6 +289,17 @@ def delete_trek(trek_id):
     return redirect(url_for('auth.trek'))
 
 
+
+@auth_bp.route('/admin_dashboard/users/delete/<int:user_id>')
+def delete_user(user_id):
+    user = Users.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+    return redirect(url_for('auth.users_data'))
+    
+
+
 @auth_bp.route('/book_trek/<int:trek_id>')
 def book_trek(trek_id):
     if session.get('role') != 'user':
@@ -301,4 +329,33 @@ def book_trek(trek_id):
 
 
 
+@auth_bp.route('/admin_dashboard/trekking_history')
+def trekking_history():
+    bookings = db.session.query(Booking, Trek, Users).join(Trek, Booking.trek_id == Trek.id).join(Users, Booking.user_id == Users.id).all()
+    return render_template('trekking_history.html', bookings=bookings)
+    
 
+@auth_bp.route('/admin_dashboard/users')
+def users_data():
+    users = Users.query.all()
+    
+    return render_template('users_data.html', users=users)
+
+
+@auth_bp.route('/user_dashboard/browse_treks')
+def browse_treks():
+    search = request.args.get('search', '')
+    difficulty = request.args.get('difficulty', '')
+    location = request.args.get('location', '')
+
+    query = Trek.query
+
+    if search:
+        query = query.filter(Trek.trek_name.ilike(f"%{search}%"))
+    if difficulty:
+        query = query.filter(Trek.difficulty == difficulty)
+    if location:
+        query = query.filter(Trek.location == location)
+
+    treks = query.all()
+    return render_template('browse_treks.html', treks=treks)

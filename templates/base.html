@@ -34,9 +34,9 @@
 
                 <li><a href="{{ url_for('auth.staff') }}"><i class="fa-solid fa-user-group"></i> Staff</a></li>
 
-                <li><a href="#"><i class="fa-solid fa-users"></i> Users</a></li>
+                <li><a href="{{ url_for('auth.users_data') }}"><i class="fa-solid fa-users"></i> Users</a></li>
 
-                <li><a href="#"><i class="fa-solid fa-calendar-check"></i> Trekking History</a></li>
+                <li><a href="{{ url_for('auth.trekking_history') }}"><i class="fa-solid fa-calendar-check"></i> Trekking History</a></li>
 
                 <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
 
@@ -44,13 +44,26 @@
 
                 <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
 
-            {% else %}
+            {% elif session.get('role') == 'staff' %}
 
                 <li><a href="#"><i class="fa-solid fa-mountain"></i> My Treks</a></li>
 
                 <li><a href="#"><i class="fa-solid fa-users"></i> Participants</a></li>
 
                 <li><a href="#"><i class="fa-solid fa-user"></i> Profile</a></li>
+
+            {% else %}
+
+                <li><a href="{{ url_for('auth.browse_treks') }}"><i class="fa-solid fa-mountain"></i> Browse Treks</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-ticket"></i> My Bookings</a></li>
+
+                <li><a href="#"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+
+
+                <li><a href="#"><i class="fa-solid fa-user"></i> Profile</a></li>
+
+
 
             {% endif %}
 
