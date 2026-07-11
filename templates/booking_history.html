@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %} Booking History {% endblock %}
+
+
+{% block cards %}
+{% endblock %}
+
+{% block content %}
+<div class="history-container">
+    <h1>Trekking History</h1>
+
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>Trek Name</th>
+                <th>Trek Dates</th>
+                <th>Completed On</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if bookings %}
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.trek.trek_name }}</td>
+                    <td>{{ booking.trek.start_date.strftime('%d %b %Y') }} - {{ booking.trek.end_date.strftime('%d %b %Y') }}</td>
+                    <td>{{ booking.booking_date.strftime('%d %b %Y') }}</td>
+                    <td>
+                        <span class="status-badge status-{{ booking.booking_status | lower }}">
+                            {{ booking.booking_status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" class="no-bookings">No trekking history found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

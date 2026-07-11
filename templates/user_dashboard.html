@@ -108,7 +108,7 @@ User Dashboard
             <td>{{ booking.booking_date }}</td>
             <td>{{ booking.booking_status }}</td>
             <td>
-                <a href="#" class="btn-outline">View Details</a>
+                <a href="{{ url_for('auth.trek_details', trek_id=trek.id) }}" class="btn-outline">View Details</a>
             </td>
         </tr>
     {% endfor %}

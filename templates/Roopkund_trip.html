@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}{{ trek.name }} - Trek Details{% endblock %}
+
+{% block cards %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/trek_details.css') }}">
+<div class="trek-detail-container">
+
+    <a href="{{ url_for('auth.browse_treks') }}" class="back-link">&larr; Back to Treks</a>
+
+    <h1 class="trek-title">Roopkund Trip</h1>
+
+    <div class="trek-detail-grid">
+        <div class="trek-image">
+            
+                <img src="/static/images/Roopkund trip.webp" alt="{{ trek.name }}">
+            
+        </div>
+
+        <div class="trek-info">
+            <div class="info-row">
+                <span class="info-label">Location</span>
+                <span class="info-value">{{ trek.location }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Difficulty</span>
+                <span class="info-value">{{ trek.difficulty }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Duration</span>
+                <span class="info-value">{{ trek.duration }} Days</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Start Date</span>
+                <span class="info-value">{{ trek.start_date.strftime('%d %B %Y') }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">End Date</span>
+                <span class="info-value">{{ trek.end_date.strftime('%d %B %Y') }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Available Slots</span>
+                <span class="info-value">{{ trek.available_slots }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="trek-description">
+        <h2>Description</h2>
+        <p>{{ trek.description }}</p>
+    </div>
+
+    <div class="trek-actions">
+        {% if trek.available_slots > 0 %}
+            <a href="{{ url_for('auth.book_trek', trek_id=trek.id) }}" class="btn btn-primary">Book Now</a>
+        {% else %}
+            <button class="btn btn-disabled" disabled>Fully Booked</button>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

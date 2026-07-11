@@ -34,7 +34,7 @@ class Trek(db.Model):
     status = db.Column(db.String,default="Available")
     start_date = db.Column(db.Date,nullable=False)
     end_date = db.Column(db.Date,nullable=False)
-    #bookings=db.relationship("Booking",cascade="all,delete",backref="trek",lazy=True) #Trek can access all of its bookings
+    bookings=db.relationship("Booking",cascade="all,delete",backref="trek",lazy=True) #Trek can access all of its bookings
     
 
 #Entity3 staff profile table

@@ -1,42 +1,47 @@
 {% extends "base.html" %}
 {% block title %} Browse Treks {% endblock %}
 
+
 {% block cards %}
 {% endblock %}
 
 {% block content %}
 
-
-
     <form method="GET" action="{{ url_for('auth.browse_treks') }}" class="filter-form">
-
         <input type="text" name="search" placeholder="Search treks..." value="{{ request.args.get('search', '') }}">
         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
 
-        <select name="difficulty">
+        <select name="difficulty" onchange="this.form.submit()">
             <option value="">Difficulty: All</option>
             <option value="Easy" {% if request.args.get('difficulty') == 'Easy' %}selected{% endif %}>Easy</option>
             <option value="Moderate" {% if request.args.get('difficulty') == 'Moderate' %}selected{% endif %}>Moderate</option>
             <option value="Hard" {% if request.args.get('difficulty') == 'Hard' %}selected{% endif %}>Hard</option>
+            <option value="Extreme" {% if request.args.get('difficulty') == 'Extreme' %}selected{% endif %}>Extreme</option>
         </select>
 
-        <select name="location">
+        <select name="location" onchange="this.form.submit()">
             <option value="">Location: All</option>
             <option value="Uttarakhand" {% if request.args.get('location') == 'Uttarakhand' %}selected{% endif %}>Uttarakhand</option>
             <option value="Himachal" {% if request.args.get('location') == 'Himachal' %}selected{% endif %}>Himachal</option>
             <option value="Nepal" {% if request.args.get('location') == 'Nepal' %}selected{% endif %}>Nepal</option>
+            <option value="Bihar" {% if request.args.get('location') == 'Bihar' %}selected{% endif %}>Bihar</option>
         </select>
-
-        
     </form>
 
-
-
-
-
-
-
-
-
+    <div class="trek-grid">
+        {% if treks %}
+            {% for trek in treks %}
+                <div class="trek-card">
+                    <h3>{{ trek.trek_name }}</h3>
+                    <p class="trek-location">{{ trek.location }}</p>
+                    <p class="trek-meta">{{ trek.difficulty|capitalize }} · {{ trek.duration_days }} Days</p>
+                    <p class="trek-slots">Available Slots: {{ trek.available_slots }}</p>
+                    <a href="{{ url_for('auth.trek_details', trek_id=trek.id) }}" class="btn-view-details">View Details</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-treks-found">No treks match your filters.</p>
+        {% endif %}
+    </div>
 
 {% endblock %}

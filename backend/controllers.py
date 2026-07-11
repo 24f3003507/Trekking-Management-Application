@@ -1,7 +1,8 @@
 #App routes
-from flask import Blueprint, Flask,render_template,request,url_for,redirect,flash ,session 
+from flask import Blueprint, Flask, app,render_template,request,url_for,redirect,flash ,session 
 from backend.models import *
 from datetime import datetime
+from datetime import date
 #from flask import current_app as app
 auth_bp = Blueprint('auth', __name__)
 
@@ -307,6 +308,17 @@ def book_trek(trek_id):
 
     user_id = session.get('id') 
 
+    # Prevent duplicate booking
+    existing_booking = Booking.query.filter_by(
+        user_id=user_id,
+        trek_id=trek_id
+    ).filter(Booking.booking_status != 'Cancelled').first()
+
+    if existing_booking:
+        flash('You have already booked this trek.', 'warning')
+        return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=user_id))
+
+
     trek = Trek.query.get(trek_id)
     if not trek or trek.available_slots <= 0:
         flash('Trek not available', 'danger')
@@ -349,13 +361,57 @@ def browse_treks():
     location = request.args.get('location', '')
 
     query = Trek.query
-
     if search:
-        query = query.filter(Trek.trek_name.ilike(f"%{search}%"))
+        query = query.filter(Trek.trek_name.ilike(f'%{search}%'))
     if difficulty:
-        query = query.filter(Trek.difficulty == difficulty)
+        query = query.filter(Trek.difficulty.ilike(f'%{difficulty}%'))
     if location:
-        query = query.filter(Trek.location == location)
+        query = query.filter(Trek.location.ilike(f'%{location}%'))
 
     treks = query.all()
     return render_template('browse_treks.html', treks=treks)
+
+
+@auth_bp.route('/user_dashboard/browse_treks/<int:trek_id>')
+def trek_details(trek_id):
+    trek = Trek.query.get(trek_id)
+    if not trek:
+        flash('Trek not found', 'danger')
+        return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=session.get('id')))
+
+    slug = trek.trek_name.strip().lower().replace(' ', '_') + '.html'
+    return render_template([slug, 'trek_details_generic.html'], trek=trek)
+
+
+@auth_bp.route('/user_dashboard/booking_history')
+def booking_history():
+    user_id = session.get('id')
+
+    bookings = (
+    Booking.query
+    .filter(Booking.user_id == user_id, Booking.booking_status.ilike('completed'))
+    .all())
+
+    return render_template('booking_history.html', bookings=bookings)
+
+
+@auth_bp.route('/user_dashboard/profile', methods=['GET', 'POST'])
+def update_profile():
+    user_id = session.get('id')
+    user = Users.query.get(user_id)
+
+    if not user:
+        flash('User not found', 'danger')
+        return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=user_id))
+
+    if request.method == 'POST':
+        user.first_name = request.form.get('first_name')
+        user.last_name = request.form.get('last_name')
+        user.email = request.form.get('email')
+        user.phone_number = request.form.get('phone_number')
+
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=user_id))
+
+    return render_template('update_profile.html', user=user)

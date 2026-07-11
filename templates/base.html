@@ -50,18 +50,17 @@
 
                 <li><a href="#"><i class="fa-solid fa-users"></i> Participants</a></li>
 
-                <li><a href="#"><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li><a href="{{ url_for('auth.update_profile') }}"><i class="fa-solid fa-user"></i> Profile</a></li>
 
             {% else %}
 
                 <li><a href="{{ url_for('auth.browse_treks') }}"><i class="fa-solid fa-mountain"></i> Browse Treks</a></li>
 
-                <li><a href="#"><i class="fa-solid fa-ticket"></i> My Bookings</a></li>
+               
+                <li><a href="{{ url_for('auth.booking_history') }}"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
 
-                <li><a href="#"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
 
-
-                <li><a href="#"><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li><a href="{{ url_for('auth.update_profile') }}"><i class="fa-solid fa-user"></i> Profile</a></li>
 
 
 
@@ -93,6 +92,18 @@
             </div>
 
         </div>
+
+
+        <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flash-messages">
+                  {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
 
 
         <!-- Cards -->
