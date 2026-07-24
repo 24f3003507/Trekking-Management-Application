@@ -415,3 +415,41 @@ def update_profile():
         return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=user_id))
 
     return render_template('update_profile.html', user=user)
+
+
+@auth_bp.route('/admin_dashboard/search')
+def admin_search():
+    query = request.args.get('q', '').strip()
+    treks, staff, users = [], [], []
+
+    if query:
+        treks = Trek.query.filter(
+            db.or_(
+                Trek.trek_name.ilike(f"%{query}%"),
+                Trek.location.ilike(f"%{query}%"),
+                db.cast(Trek.id, db.String) == query
+            )
+        ).all()
+
+        staff = Staff_profile.query.filter(
+            db.or_(
+                Staff_profile.name.ilike(f"%{query}%"),
+                db.cast(Staff_profile.id, db.String) == query
+            )
+        ).all()
+
+        users = Users.query.filter(
+            db.or_(
+                Users.full_name.ilike(f"%{query}%"),
+                Users.username.ilike(f"%{query}%"),
+                db.cast(Users.id, db.String) == query
+            )
+        ).all()
+
+    return render_template(
+        'search.html',
+        query=query,
+        treks=treks,
+        staff=staff,
+        users=users
+    )

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %} Search Results {% endblock %}
+
+{% block cards %}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-header">
+    <h1>Search Results</h1>
+</div>
+
+<form method="GET" action="{{ url_for('auth.admin_search') }}" style="margin-bottom: 20px;">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by name or ID..." style="padding:8px; width:300px;">
+    <button type="submit" style="background-color: #61c10c; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px;">Search</button>
+</form>
+
+{% if query %}
+
+<h2>Treks</h2>
+<table>
+    <tr>
+        <th>ID</th><th>Trek Name</th><th>Location</th><th>Difficulty</th><th>Status</th>
+    </tr>
+    {% for trek in treks %}
+    <tr>
+        <td>{{ trek.id }}</td>
+        <td>{{ trek.trek_name }}</td>
+        <td>{{ trek.location }}</td>
+        <td>{{ trek.difficulty }}</td>
+        <td>{{ trek.status }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No treks found.</td></tr>
+    {% endfor %}
+</table>
+
+<h2>Staff</h2>
+<table>
+    <tr>
+        <th>ID</th><th>Name</th><th>Phone</th><th>Specialization</th><th>Experience (yrs)</th>
+    </tr>
+    {% for s in staff %}
+    <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.phone }}</td>
+        <td>{{ s.specialization }}</td>
+        <td>{{ s.experience_years }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No staff found.</td></tr>
+    {% endfor %}
+</table>
+
+<h2>Users</h2>
+<table>
+    <tr>
+        <th>ID</th><th>Full Name</th><th>Username</th><th>Email</th>
+    </tr>
+    {% for u in users %}
+    <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.full_name }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">No users found.</td></tr>
+    {% endfor %}
+</table>
+
+{% endif %}
+{% endblock %}
