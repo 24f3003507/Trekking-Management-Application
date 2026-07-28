@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Participants{% endblock %}
+
+{% block cards %}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <button type="button" class="btn-add-trek" onclick="history.back()">&larr; Back</button>
+</div>
+<br> <br>
+
+<h1>All Participants</h1>
+<table class="participants-table">
+    <thead>
+        <tr>
+            <th>Trek</th>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Booking Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b.trek.trek_name }}</td>
+            <td>{{ b.users.full_name }}</td>
+            <td>{{ b.users.email }}</td>
+            <td>{{ b.booking_date.strftime('%d %b %Y') }}</td>
+            <td>{{ b.booking_status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

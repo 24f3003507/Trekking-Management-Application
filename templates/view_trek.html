@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ trek.trek_name }}{% endblock %}
+
+{% block cards %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/approve_staff.css') }}">
+
+<div class="page-header">
+    <button type="button" class="btn-add-trek" onclick="history.back()">&larr; Back</button>
+</div>
+
+
+
+
+
+<div class="add_trek">
+    <h1>{{ trek.trek_name }}</h1>
+
+    <br><br>
+
+
+    <div><strong>Location:</strong> {{ trek.location }}</div><br>
+    <div><strong>Duration:</strong> {{ trek.duration_days }} Days</div><br>
+    <div><strong>Start Date:</strong> {{ trek.start_date.strftime('%d %b %Y') }}</div><br>
+    <div><strong>End Date:</strong> {{ trek.end_date.strftime('%d %b %Y') }}</div><br>
+    <div><strong>Available Slots:</strong> {{ trek.available_slots }}</div><br>
+    <div><strong>Status:</strong> {{ trek.status }}</div>
+
+</div>
+<br><br>
+
+<h2>Participants ({{ bookings|length }})</h2>
+<table class="participants-table">
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Booking Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b.users.full_name }}</td>
+            <td>{{ b.users.email }}</td>
+            <td>{{ b.booking_date.strftime('%d %b %Y') }}</td>
+            <td>{{ b.booking_status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -95,9 +95,49 @@ def user_dashboard():
 @auth_bp.route("/staff_dashboard")
 def staff_dashboard():
     
-    return render_template("staff_dashboard.html")
+    user_id = session.get('id')
+    if not user_id:
+        flash("Please login first", "danger")
+        return redirect(url_for('auth_bp.login'))
 
+    staff = Staff_profile.query.filter_by(user_id=user_id).first()
+    if not staff:
+        flash("Staff profile not found", "danger")
+        return redirect(url_for('auth_bp.login'))
 
+    # Only treks assigned to this staff member
+    treks = Trek.query.filter_by(assigned_staff_id=staff.id).all()
+
+    trek_data = []
+    total_participants = 0
+    open_treks_count = 0
+
+    for trek in treks:
+        # count bookings for this trek, excluding cancelled ones
+        participant_count = Booking.query.filter(
+            Booking.trek_id == trek.id,
+            Booking.booking_status != "Cancelled"
+        ).count()
+
+        total_participants += participant_count
+        if trek.status not in ("Completed", "Inactive"):
+            open_treks_count += 1
+        trek_data.append({
+            'id': trek.id,
+            'name': trek.trek_name,
+            'location': trek.location,
+            'participants': participant_count,
+            'slots': trek.available_slots,
+            'status': trek.status
+        })
+
+    return render_template(
+        "staff_dashboard.html",
+        treks=trek_data,
+        assigned_treks=len(treks),
+        participants=total_participants,
+        open_treks=open_treks_count
+    )
 
 @auth_bp.route("/register_staff", methods=["GET", "POST"])
 def register_staff():
@@ -452,4 +492,94 @@ def admin_search():
         treks=treks,
         staff=staff,
         users=users
+    )
+
+
+@auth_bp.route('/staff_dashboard/manage_trek/<int:trek_id>')
+def manage_trek(trek_id):
+    user_id = session.get('id')
+    if not user_id:
+        flash("Please login first", "danger")
+        return redirect(url_for('auth_bp.login'))
+
+    staff = Staff_profile.query.filter_by(user_id=user_id).first()
+    if not staff:
+        flash("Staff profile not found", "danger")
+        return redirect(url_for('auth_bp.login'))
+
+    trek = Trek.query.get_or_404(trek_id)
+    bookings = Booking.query.filter(
+        Booking.trek_id == trek.id,
+        Booking.booking_status != "Cancelled"
+    ).all()
+
+    return render_template('manage_trek.html', trek=trek, bookings=bookings, name=session.get('name'))
+
+
+@auth_bp.route('/staff_dashboard/view_trek/<int:trek_id>')
+def view_trek(trek_id):
+    user_id = session.get('id')
+    if not user_id:
+        flash("Please login first", "danger")
+        return redirect(url_for('auth_bp.login'))
+
+    staff = Staff_profile.query.filter_by(user_id=user_id).first()
+    if not staff:
+        flash("Staff profile not found", "danger")
+        return redirect(url_for('auth_bp.login'))
+
+    trek = Trek.query.get_or_404(trek_id)
+    bookings = Booking.query.filter(
+        Booking.trek_id == trek.id,
+        Booking.booking_status != "Cancelled"
+    ).all()
+
+    return render_template('view_trek.html', trek=trek, bookings=bookings, name=session.get('name'))
+
+
+@auth_bp.route('/staff_dashboard/manage_trek/<int:trek_id>/update', methods=['POST'])
+def update_trek(trek_id):
+    user_id = session.get('id')
+    if not user_id:
+        flash("Please login first", "danger")
+        return redirect(url_for('auth.login'))
+
+    staff = Staff_profile.query.filter_by(user_id=user_id).first()
+    if not staff:
+        flash("Staff profile not found", "danger")
+        return redirect(url_for('auth.login'))
+
+    trek = Trek.query.get_or_404(trek_id)
+
+    trek.available_slots = int(request.form.get('available_slots', trek.available_slots))
+    trek.status = request.form.get('status', trek.status)
+
+    db.session.commit()
+    flash("Trek updated successfully", "success")
+    return redirect(url_for('auth.manage_trek', trek_id=trek.id))
+
+@auth_bp.route("/staff_dashboard/participants")
+def staff_participants():
+    user_id = session.get('id')
+    if not user_id:
+        flash("Please login first", "danger")
+        return redirect(url_for('auth.login'))
+
+    staff = Staff_profile.query.filter_by(user_id=user_id).first()
+    if not staff:
+        flash("Staff profile not found", "danger")
+        return redirect(url_for('auth.login'))
+
+    treks = Trek.query.filter_by(assigned_staff_id=staff.id).all()
+    trek_ids = [t.id for t in treks]
+
+    bookings = Booking.query.filter(
+        Booking.trek_id.in_(trek_ids),
+        Booking.booking_status != "Cancelled"
+    ).all()
+
+    return render_template(
+        'staff_participants.html',
+        bookings=bookings,
+        name=session.get('name')
     )

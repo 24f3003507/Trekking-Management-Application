@@ -55,8 +55,12 @@ Staff Dashboard
     <td>{{ trek.status }}</td>
 
     <td>
-
+        <a href="{{ url_for('auth.manage_trek', trek_id=trek.id) }}">
         <button class="btn">Manage</button>
+        </a>
+        <a href="{{ url_for('auth.view_trek', trek_id=trek.id) }}">
+        <button class="btn">View</button>
+        </a>
 
     </td>
 

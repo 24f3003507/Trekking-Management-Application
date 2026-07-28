@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Manage Trek{% endblock %}
+
+{% block cards %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+
+<div class="page-header">
+    <button type="button" class="btn-add-trek" onclick="history.back()">&larr; Back</button>
+</div>
+
+<div class="profile-container">
+    <h1>{{ trek.trek_name }}</h1>
+    <p class="profile-subtitle">Update and manage your trek information below.</p>
+
+    <form method="POST" action="{{ url_for('auth.update_trek', trek_id=trek.id) }}">
+
+        <div class="form-row">
+
+            <div class="form-group">
+                <label>Available Slots</label>
+                <input type="number" name="available_slots" value="{{ trek.available_slots }}" min="0" required>
+            </div>
+
+            <br><br>
+
+            <div class="form-group">
+                <label>Trek Status</label>
+                <select name="status">
+                    <option value="Available" {% if trek.status == "Available" %}selected{% endif %}>Upcoming (Active)</option>
+                    <option value="Started" {% if trek.status == "Started" %}selected{% endif %}>Started</option>
+                    <option value="Ongoing" {% if trek.status == "Ongoing" %}selected{% endif %}>Ongoing</option>
+                    <option value="Completed" {% if trek.status == "Completed" %}selected{% endif %}>Completed</option>
+                    <option value="Inactive" {% if trek.status == "Inactive" %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+            <br><br>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">Save Changes</button>
+            <button type="button" class="btn-cancel" onclick="history.back()">Cancel</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

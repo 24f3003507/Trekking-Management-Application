@@ -46,9 +46,9 @@
 
             {% elif session.get('role') == 'staff' %}
 
-                <li><a href="#"><i class="fa-solid fa-mountain"></i> My Treks</a></li>
+               
 
-                <li><a href="#"><i class="fa-solid fa-users"></i> Participants</a></li>
+                <li><a href="{{ url_for('auth.staff_participants') }}"><i class="fa-solid fa-users"></i> Participants</a></li>
 
                 <li><a href="{{ url_for('auth.update_profile') }}"><i class="fa-solid fa-user"></i> Profile</a></li>
 
