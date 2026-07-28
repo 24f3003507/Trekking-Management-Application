@@ -20,16 +20,12 @@
         </thead>
         <tbody>
             {% if bookings %}
-                {% for booking in bookings %}
+                {% for b in bookings %}
                 <tr>
-                    <td>{{ booking.trek.trek_name }}</td>
-                    <td>{{ booking.trek.start_date.strftime('%d %b %Y') }} - {{ booking.trek.end_date.strftime('%d %b %Y') }}</td>
-                    <td>{{ booking.booking_date.strftime('%d %b %Y') }}</td>
-                    <td>
-                        <span class="status-badge status-{{ booking.booking_status | lower }}">
-                            {{ booking.booking_status }}
-                        </span>
-                    </td>
+                    <td>{{ b.trek.trek_name }}</td>
+                    <td>{{ b.trek.start_date.strftime('%d %b %Y') }} - {{ b.trek.end_date.strftime('%d %b %Y') }}</td>
+                    <td>{{ b.booking_date.strftime('%d %b %Y') }}</td>
+                    <td>{{ b.trek.status }}</td>
                 </tr>
                 {% endfor %}
             {% else %}

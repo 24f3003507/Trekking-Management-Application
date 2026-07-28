@@ -360,7 +360,15 @@ def book_trek(trek_id):
 
 
     trek = Trek.query.get(trek_id)
-    if not trek or trek.available_slots <= 0:
+    if not trek:
+        flash('Trek not found', 'danger')
+        return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=user_id))
+
+    if trek.status.lower() == 'inactive':
+        flash('This trek is currently inactive and not accepting bookings.', 'warning')
+        return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=user_id))
+
+    if trek.available_slots <= 0:
         flash('Trek not available', 'danger')
         return redirect(url_for('auth.user_dashboard', name=session.get('username'), id=user_id))
 
@@ -426,11 +434,19 @@ def trek_details(trek_id):
 @auth_bp.route('/user_dashboard/booking_history')
 def booking_history():
     user_id = session.get('id')
+    if not user_id:
+        flash("Please login first", "danger")
+        return redirect(url_for('auth.login'))
 
     bookings = (
-    Booking.query
-    .filter(Booking.user_id == user_id, Booking.booking_status.ilike('completed'))
-    .all())
+        db.session.query(Booking)
+        .join(Trek, Booking.trek_id == Trek.id)
+        .filter(
+            Booking.user_id == user_id,
+            Trek.status.ilike('completed')
+        )
+        .all()
+    )
 
     return render_template('booking_history.html', bookings=bookings)
 

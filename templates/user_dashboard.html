@@ -50,7 +50,11 @@ User Dashboard
                 <td>{{ trek.available_slots }}</td>
                 
                 <td>
-                    <a href="{{ url_for('auth.book_trek', trek_id=trek.id) }}" style="color:#61c10c">Book Now</a>
+                    {% if trek.status.lower() != 'inactive' %}
+                        <a href="{{ url_for('auth.book_trek', trek_id=trek.id) }}">Book Now</a>
+                    {% else %}
+                        <span>Not Available</span>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -89,7 +93,7 @@ User Dashboard
         <tr>
             <td>{{ trek.trek_name }}</td>
             <td>{{ booking.booking_date }}</td>
-            <td>{{ booking.booking_status }}</td>
+            <td>{{ trek.status }}</td>
             <td>
                 <a href="{{ url_for('auth.trek_details', trek_id=trek.id) }}" class="btn-outline">View Details</a>
             </td>

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %} Browse Treks {% endblock %}
+
+
+{% block cards %}
+{% endblock %}
+
+{% block content %}
+<h2>My Assigned Treks</h2>
+<table class="trek-table">
+  <thead>
+    <tr>
+      <th>Trek</th><th>Location</th><th>Participants</th><th>Slots</th><th>Status</th><th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for trek in treks %}
+    <tr>
+      <td>{{ trek.name }}</td>
+      <td>{{ trek.location }}</td>
+      <td>{{ trek.bookings|length }}</td>
+      <td>{{ trek.total_slots }}</td>
+      <td>{{ trek.status }}</td>
+      <td>
+        <a href="{{ url_for('auth.view_trek', trek_id=trek.id) }}" class="btn-manage">View</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">No treks assigned yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
