@@ -13,7 +13,7 @@ body{
 
 /* Header */
 header {
-    /*background-color: linear-gradient(to_right, #0062E6, #33AeFF);*/
+    
     background: #61c10c;
     color: white;
     padding: 10px 0;
@@ -175,4 +175,16 @@ nav a{
 .btn1:hover{
     background:white;
     color:black;
+}
+.back-button {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    
+    background-color: white;
+    border: 2px solid white;
+    text-decoration: none;
+    border-radius: 30px;
+    
+
 }

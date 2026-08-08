@@ -2,7 +2,7 @@
 from flask import Blueprint, Flask, app,render_template,request,url_for,redirect,flash ,session 
 from backend.models import *
 from datetime import datetime
-from datetime import date
+
 #from flask import current_app as app
 auth_bp = Blueprint('auth', __name__)
 
@@ -334,6 +334,10 @@ def delete_trek(trek_id):
 @auth_bp.route('/admin_dashboard/users/delete/<int:user_id>')
 def delete_user(user_id):
     user = Users.query.get(user_id)
+    staff= Staff_profile.query.filter_by(user_id=user_id).first()
+    if staff:
+        db.session.delete(staff)
+        db.session.commit()
     if user:
         db.session.delete(user)
         db.session.commit()
