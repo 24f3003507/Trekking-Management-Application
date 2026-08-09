@@ -8,7 +8,7 @@ A Flask-based web application for managing trekking activities. The system suppo
 
 The application allows users to browse and book treks, while admins can manage treks, users, and staff assignments.
 
----
+
 
 ## Features
 
@@ -21,7 +21,7 @@ The application allows users to browse and book treks, while admins can manage t
 - Booking History
 - SQLite Database using SQLAlchemy
 
----
+
 
 ## Technologies Used
 
@@ -33,7 +33,7 @@ The application allows users to browse and book treks, while admins can manage t
 - Jinja2
 - SQLite
 
----
+
 
 ## Project Structure
 
@@ -52,7 +52,7 @@ Trekking-Management-Application/
 └── requirements.txt
 ```
 
----
+
 
 ## Installation
 
@@ -79,7 +79,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
----
+
 
 ### 3. Install Dependencies
 
@@ -93,7 +93,7 @@ If `requirements.txt` is not available, install the required packages manually:
 pip install flask flask-sqlalchemy
 ```
 
----
+
 
 ## Running the Application
 
@@ -111,7 +111,7 @@ http://127.0.0.1:5003
 
 Open the above URL in your browser.
 
----
+
 
 ## Database
 
@@ -128,7 +128,7 @@ db.create_all()
 
 The database file will be created inside the project directory (or the configured `instance` folder).
 
----
+
 
 ## Login
 
@@ -140,7 +140,7 @@ Depending on the user role, the application redirects to:
 - Staff Dashboard
 - User Dashboard
 
----
+
 
 ## Important Notes
 
@@ -149,7 +149,7 @@ Depending on the user role, the application redirects to:
 - Do not delete the SQLite database unless you want to reset all stored data.
 - The application runs in debug mode during development.
 
----
+
 
 ## Author
 
